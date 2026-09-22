@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from json import loads
 
 # Create your views here.
+
 @method_decorator(csrf_exempt,name="dispatch")
 class EmployeeListCreate(View):
 
