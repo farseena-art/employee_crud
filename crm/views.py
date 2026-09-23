@@ -30,19 +30,22 @@ class EmployeeListCreate(View):
 
         form_data = loads(request.body)
 
-        Employee.objects.create(
+        # Employee.objects.create(
 
-            name=form_data.get("name"),
-            department=form_data.get("department"),
-            salary=form_data.get("salary"),
-            location=form_data.get("location"),
-            email=form_data.get("email")
-        )
+        #     name=form_data.get("name"),
+        #     department=form_data.get("department"),
+        #     salary=form_data.get("salary"),
+        #     location=form_data.get("location"),
+        #     email=form_data.get("email")
+        # )
+
+        Employee.objects.create(**form_data)
 
         response_data = {"message":"Employee created..."}
 
         return JsonResponse(response_data)
 
+@method_decorator(csrf_exempt,name="dispatch")
 class EmployeeRetrieveUpdateDeleteView(View):
 
     def get(self,request,pk=None):
@@ -52,3 +55,20 @@ class EmployeeRetrieveUpdateDeleteView(View):
         employee_detail = list(qs)
 
         return JsonResponse(employee_detail,safe=False)
+
+
+    def delete(self,request,pk=None):
+
+        Employee.objects.get(id=pk).delete()
+
+        return JsonResponse({"message":"deleted..."})
+
+    def put(self,request,pk=None):
+
+        form_data = loads(request.body)
+
+        Employee.objects.filter(id=pk).update(**form_data)
+
+        response_data = {"message":"updated..."}
+
+        return JsonResponse(response_data)
